@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<!-- 定义三类User -->
+	<bean id="admin" class="dps.bean.User">
+		<property name="username" value="admin" />
+	</bean>
+	<bean id="register" class="dps.bean.User">
+		<property name="username" value="register" />
+	</bean>
+	<bean id="other" class="dps.bean.User">
+		<property name="username" value="other" />
+	</bean>
+
+	<!-- 目标bean定义 -->
+	<bean id="serviceTarget" class="dps.dao.UserDaoImpl" />
+	<!-- 日志拦截器定义 -->
+	<bean id="logInterceptor" class="dps.interceptor.LogInterceptor" />
+	<!-- 权限验证拦截器定义 -->
+	<bean id="authorityInterceptor"
+		class="dps.interceptor.AuthorityInterceptor">
+		<property name="user" ref="other" />
+	</bean>
+	<!-- AOP代理设置 -->
+	<bean id="service"
+		class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces" value="dps.dao.UserDao"></property>
+		<property name="target" ref="serviceTarget"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>authorityInterceptor</value>
+				<value>logInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 供测试端调用的代理bean定义 -->
+	<bean id="test" class="dps.service.UserServiceImpl">
+		<property name="testDao" ref="service"></property>
+	</bean>
+</beans> 
