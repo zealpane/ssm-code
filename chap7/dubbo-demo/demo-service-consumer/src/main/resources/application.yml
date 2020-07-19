@@ -1,14 +1,22 @@
 server:
-  port: 8762
+  port: 8763
 spring:
   application:
-    name: demo-service-provider
+    name: demo-service-consumer
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-dubbo:  application:    name: ${spring.application.name} 
-  registry:    address: nacos://127.0.0.1:8848
-  scan:    base-packages: org.demo.common
-  protocol:    name: dubbo
+nacos:
+  discovery:
+    server-addr: 127.0.0.1:8848
+dubbo:
+  application:
+    name: demo-service-consumer
+  registry:
+    address: nacos://127.0.0.1:8848
+  scan:
+    base-packages: org.demo
+  protocol:
+    name: dubbo
     port: 20880
