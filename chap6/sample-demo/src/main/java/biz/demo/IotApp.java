@@ -28,45 +28,43 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableAsync
 @SpringBootApplication
-public class IotApp {
+public class IotApp implements ServletContextListener {
 
 	@Value("${iot.port.wsPush}")
 	private Integer port;
-	
-//	@Override
-//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//		return application.sources(IotApp.class);
-//	}
 
+	private SocketIOServer server;
+	
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(IotApp.class, args);
 	}
 
-	private SocketIOServer server;
+	@Bean
+	public SocketIOServer socketIOServer() {
+		Configuration config = new Configuration();
+		config.setOrigin(null); // 注意如果开放跨域设置，需要设置为null而不是"*"
+		config.setPort(8868);
+		config.setSocketConfig(new SocketConfig());
+		config.setWorkerThreads(100);
+		config.setAuthorizationListener(handshakeData -> true);
+		server = new SocketIOServer(config);
+		server.start();
+		return server;
+	}
 
-//	@Bean
-//	public SocketIOServer socketIOServer() {
-//		Configuration config = new Configuration();
-//		config.setOrigin(null); // 注意如果开放跨域设置，需要设置为null而不是"*"
-//
-//		config.setPort(port);
-//		config.setSocketConfig(new SocketConfig());
-//		config.setWorkerThreads(100);
-//		config.setAuthorizationListener(handshakeData -> true);
-//		server = new SocketIOServer(config);
-//		server.start();
-//		return server;
-//	}
+   	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+	}
 
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		server.stop();
+	}
 
-//	@Override
-//	public void contextDestroyed(ServletContextEvent sce) {
-//		server.stop();
-//	}
+	@Bean
+	public SpringAnnotationScanner springAnnotationScanner(SocketIOServer socketIOServer) {
+		return new SpringAnnotationScanner(socketIOServer);
+	}
 
-//	@Bean
-//	public SpringAnnotationScanner springAnnotationScanner(SocketIOServer socketIOServer) {
-//		return new SpringAnnotationScanner(socketIOServer);
-//	}
 
 }

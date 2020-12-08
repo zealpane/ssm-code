@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column label="设备信息">
         <template slot-scope="scope">
-          {{scope.row.name}}
+          {{ scope.row.name }}
         </template>
       </el-table-column>
       <el-table-column label="采集数据" align="center">

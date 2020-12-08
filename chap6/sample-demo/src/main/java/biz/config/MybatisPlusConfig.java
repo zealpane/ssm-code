@@ -1,4 +1,4 @@
-package biz.demo.config;
+package biz.config;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package biz.demo.common.facade;
+package biz.common.facade;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

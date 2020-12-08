@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
-import biz.demo.common.facade.PageRequest;
+import biz.common.facade.PageRequest;
 import biz.demo.item.entity.ItemData;
 import biz.demo.item.service.ItemDataService;
 

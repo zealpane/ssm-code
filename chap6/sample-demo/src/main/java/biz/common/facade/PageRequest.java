@@ -1,4 +1,4 @@
-package biz.demo.common.facade;
+package biz.common.facade;
 
 import java.io.Serializable;
 

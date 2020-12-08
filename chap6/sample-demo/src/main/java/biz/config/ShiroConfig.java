@@ -1,4 +1,4 @@
-package biz.demo.config;
+package biz.config;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import biz.demo.config.shiro.MyRealm;
+import biz.config.shiro.MyRealm;
 
 /**
  * 权限拦截配置

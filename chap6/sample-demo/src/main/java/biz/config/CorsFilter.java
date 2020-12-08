@@ -1,4 +1,4 @@
-package biz.demo.config;
+package biz.config;
 import java.io.IOException;
 
 import javax.servlet.Filter;

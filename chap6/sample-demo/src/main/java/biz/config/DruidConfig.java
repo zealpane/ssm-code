@@ -1,4 +1,4 @@
-package biz.demo.config;
+package biz.config;
 
 import javax.sql.DataSource;
 

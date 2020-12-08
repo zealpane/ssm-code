@@ -55,7 +55,6 @@
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
-      
       <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
@@ -78,7 +77,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import request from '@/utils/request'
 
 export default {
   filters: {
@@ -104,13 +103,25 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.getList()
   },
   methods: {
-    fetchData() {
+    // 查询设备列表
+    getList() {
       this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
+      request.get(`/item/itemDevice`, 
+        { 
+          params: {
+            size: 10,
+            ...this.formModel
+          }
+        }
+      )
+      .then(res => {
+        res.content.records.forEach((item, index) => {
+          item.status = item.status === 0 ? '正常' : item.status === 2 ? '告警' : '失联'
+        })
+        this.list = res.data.records
         this.listLoading = false
       })
     }

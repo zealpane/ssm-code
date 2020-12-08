@@ -1,4 +1,4 @@
-package biz.demo.config.shiro;
+package biz.config.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;

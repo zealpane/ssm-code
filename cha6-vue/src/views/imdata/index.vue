@@ -53,7 +53,7 @@
       </el-table-column>
       <el-table-column label="采集数据" align="center">
         <template slot-scope="scope">
-          <p>温度：26.7℃</p>
+          <p>温度：{{ scope.row.title }}26.7℃</p>
           <p>湿度：54%</p>
           <p>PM2.5：89</p>
         </template>

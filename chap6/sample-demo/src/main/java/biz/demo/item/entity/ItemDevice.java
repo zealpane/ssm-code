@@ -3,8 +3,11 @@ package biz.demo.item.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -46,6 +49,11 @@ public class ItemDevice extends Model<ItemDevice> {
 
     @ApiModelProperty(value = "最新数据json序列化")
     private String dataJson;
+    
+    private Integer status;
+    
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastDataTime;
 
 
     @Override
