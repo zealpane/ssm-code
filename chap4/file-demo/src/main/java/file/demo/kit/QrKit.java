@@ -1,4 +1,4 @@
-package file.demo;
+package file.demo.kit;
 
 import java.io.IOException;
 import java.util.Hashtable;

@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,10 +20,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.zxing.WriterException;
 
+import file.demo.entity.CommonFile;
+import file.demo.kit.QrKit;
+import file.demo.kit.R;
+import file.demo.service.CommonFileService;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -30,10 +36,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileController {
 
+	@Autowired
+	CommonFileService commonFileService;
+	
 	private static final String[] IMGTYPE = { ".jpg", ".icon", ".png",
 			".jpeg", ".gif" };
 	static String domain = "";
 
+	/**
+	 * 文件上传
+	 * @param file
+	 * @param request
+	 * @param fId
+	 * @param type
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@ResponseBody
 	@PostMapping("/img")
 	public R<String> imgUpload(MultipartFile file,
 			HttpServletRequest request, Long fId, Integer type)
@@ -53,7 +73,7 @@ public class FileController {
 			if (string.equals(suffix.toLowerCase())) {
 				String realPath = request.getServletContext()
 						.getRealPath("/imgupload");
-				// 存储路径
+				// 存储路径，在本地运行时可以从这里看到实际存储的路径
 				File fileUploadPath = new File(realPath);
 				if (!fileUploadPath.exists()) {
 					fileUploadPath.mkdirs();
@@ -75,6 +95,11 @@ public class FileController {
 		return R.error("文件类型限定为.jpg,.icon,.png,.jpeg,.gif");
 	}
 
+	/**
+	 * 文件下载
+	 * @param fileName
+	 * @return
+	 */
 	@GetMapping("/downloadFile/{fileName:.*}")
 	public ResponseEntity<org.springframework.core.io.Resource> downloadCacheFile(
 			@PathVariable("fileName") String fileName) {
