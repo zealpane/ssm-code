@@ -81,7 +81,12 @@ public class AcUserController {
 		acUserService.updateById(entity);
 		return R.ok("修改成功");
 	}
-	
+
+	/**
+	 * 路径参数是一种不考虑性能的规范，实际生产环境不推荐
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("/{id}")
 	public R getOne(@PathVariable Long id) {
 		return R.ok(acUserService.getById(id));
