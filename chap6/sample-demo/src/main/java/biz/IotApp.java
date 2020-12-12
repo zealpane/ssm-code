@@ -1,4 +1,4 @@
-package biz.demo;
+package biz;
 
 
 import javax.servlet.ServletContextEvent;
@@ -43,7 +43,7 @@ public class IotApp implements ServletContextListener {
 	public SocketIOServer socketIOServer() {
 		Configuration config = new Configuration();
 		config.setOrigin(null); // 注意如果开放跨域设置，需要设置为null而不是"*"
-		config.setPort(8868);
+		config.setPort(port);
 		config.setSocketConfig(new SocketConfig());
 		config.setWorkerThreads(100);
 		config.setAuthorizationListener(handshakeData -> true);
@@ -57,6 +57,9 @@ public class IotApp implements ServletContextListener {
 	}
 
 	@Override
+	/**
+	 * 在容器关闭的时候将启动的socket端口服务也关掉
+	 */
 	public void contextDestroyed(ServletContextEvent sce) {
 		server.stop();
 	}

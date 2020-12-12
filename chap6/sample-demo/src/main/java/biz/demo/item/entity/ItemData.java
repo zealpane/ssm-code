@@ -3,6 +3,8 @@ package biz.demo.item.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,6 +36,8 @@ public class ItemData extends Model<ItemData> {
 
     private Double pm2d5;
 
+    private Long deviceId;
+    private LocalDateTime createTime;
 
     @Override
     protected Serializable pkVal() {

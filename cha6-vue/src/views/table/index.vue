@@ -24,13 +24,13 @@
       </el-form>
     </div>
     <div slot="header">
-      <el-button type="primary" size="small" @click="add">新增</el-button>
+      <el-button type="primary" size="small" @click="showCreateForm">新增</el-button>
       <el-button type="danger" size="small" @click="batchDelete">删除</el-button>
     </div>
     <br>
     <el-table
-      v-loading="listLoading"
-      :data="list"
+      v-loading="devicePage.listLoading"
+      :data="devicePage.records"
       element-loading-text="Loading"
       border
       fit
@@ -52,18 +52,18 @@
       </el-table-column>
       <el-table-column label="所属" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.des }}</span>
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status = 1 ? '正常' : '告警' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="最近动态时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.lastDataTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
@@ -73,6 +73,27 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination">
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :pager-count="5"
+          :total="devicePage.total"
+          :page-size="devicePage.pageSize"
+          :current-page="devicePage.currentPage"
+          :page-sizes="[10, 50, 100, 200, 500, 1000]"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+    </div>
+
+    <el-drawer
+      title="我是标题"
+      :visible.sync="deviceFormDialog.visible"
+      direction="rtl"
+      :before-close="handleClose">
+      <span>我来啦!</span>
+    </el-drawer>
   </div>
 </template>
 
@@ -92,13 +113,33 @@ export default {
   },
   data() {
     return {
-      list: null,
-      listLoading: true,
-      deviceTypeList: [{
-        id: 1,
-        name: '空气质量'
-      }],
+      devicePage: { // 主题数据，设备分页列表，这个地方与list同级的还有分页的其他参数信息
+        records: [],
+        listLoading: true
+      },
+      deviceFormDialog: { // 设备表单弹框
+        visible: false, // 控制是否显示
+        isCreate: true,
+        deviceForm: {
+          metadata: {},
+          specification: '',
+          siteToken: ''
+        },
+        deviceFormRules: { // 增加或编辑表单校验规则
+          comments: [{ required: true, message: "请输入设备名称", trigger: "blur" }],
+          specificationToken: [
+            { required: true, message: "请选择分类", trigger: "change" }
+          ]
+        }
+      },
+      dependencyList: { // 依赖列表，主要是下拉框相关
+        deviceTypeList: [{
+          id: 1,
+          name: '空气质量'
+        }]
+      },
       searchForm: {
+        // 不需要可见属性，其他规则与增加编辑表单一致
       }
     }
   },
@@ -108,7 +149,7 @@ export default {
   methods: {
     // 查询设备列表
     getList() {
-      this.listLoading = true
+      this.devicePage.listLoading = true
       request.get(`/item/itemDevice`, 
         { 
           params: {
@@ -118,12 +159,16 @@ export default {
         }
       )
       .then(res => {
-        res.content.records.forEach((item, index) => {
-          item.status = item.status === 0 ? '正常' : item.status === 2 ? '告警' : '失联'
-        })
-        this.list = res.data.records
-        this.listLoading = false
-      })
+        // res.content.records.forEach((item, index) => {
+        //   item.status = item.status === 0 ? '正常' : item.status === 2 ? '告警' : '失联'
+        // })
+          this.devicePage = res.data
+          this.devicePage.listLoading = false
+     })
+    },
+    // 显示增加表单
+    showCreateForm() {
+      this.deviceFormDialog.visible = true
     }
   }
 }
