@@ -4,14 +4,14 @@ spring:
   application:
     name: sample-demo
   redis:
-    host: 127.0.0.1
+    host: 218.28.238.170
     port: 6379
-    password: redis_f_6379
+    password: f_redis__6379
   datasource:
     name: test
-    url: jdbc:mysql://127.0.0.1:3306/mybatis_demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://218.28.238.170:3306/mybatis-demo?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
     username: root
-    password: Root123!
+    password: kzxkdzt007!
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver

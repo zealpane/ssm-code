@@ -15,6 +15,7 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
+    "echarts": "4.2.1",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "axios": "0.18.1",

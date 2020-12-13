@@ -1,8 +1,7 @@
 package biz.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import biz.config.shiro.MyRealm;
+import biz.config.shiro.ShiroLoginFilter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
@@ -18,8 +17,9 @@ import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import biz.config.shiro.MyRealm;
+import javax.servlet.Filter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 权限拦截配置
@@ -59,16 +59,16 @@ public class ShiroConfig {
         factory.setLoginUrl("/api/ac/unauthorized");
         factory.setUnauthorizedUrl("/forbidden");
         
-//        Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
-//        filtersMap.put("shiroLoginFilter", new ShiroLoginFilter());
-//        factory.setFilters(filtersMap);
-        
         Map<String, String> filterMap = new LinkedHashMap<>();
         // 过滤链定义，从上向下顺序执行
         for (String filter : filters.split("\\;")) {
             String[] keyValue = filter.split("\\=");
             filterMap.put(keyValue[0], keyValue[1]);
         }
+        // 自定义filter处理未登录情况的返回值
+        Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
+        filtersMap.put("user", new ShiroLoginFilter());
+        factory.setFilters(filtersMap);
         factory.setFilterChainDefinitionMap(filterMap);
         return factory;
     }

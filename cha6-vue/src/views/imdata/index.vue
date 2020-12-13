@@ -46,9 +46,8 @@
         </template>
       </el-table-column>
       <el-table-column label="设备信息">
-        <template slot-scope="scope">
-          名称：{{ scope.row.title }}
-          <p>型号：空气质量助手A2</p>
+        <template slot-scope='scope'>
+          设备编号：{{ scope.row.deviceId }}
         </template>
       </el-table-column>
       <el-table-column label="采集数据" align="center">
@@ -66,9 +65,6 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
-        <template slot-scope="slotProps">
-          <el-button type="text" @click="relate(slotProps.$index)">查看详情</el-button>
-        </template>
       </el-table-column>
     </el-table>
     <div class="pagination">
@@ -77,8 +73,8 @@
           layout="total, sizes, prev, pager, next, jumper"
           :pager-count="5"
           :total="devicePage.total"
-          :page-size="devicePage.pageSize"
-          :current-page="devicePage.currentPage"
+          :page-size="devicePage.size"
+          :current-page="devicePage.current"
           :page-sizes="[10, 50, 100, 200, 500, 1000]"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
@@ -151,7 +147,8 @@ export default {
       request.get(`/item/itemData`, 
         { 
           params: {
-            size: 10,
+            size: this.devicePage.size,
+            current: this.devicePage.current,
             ...this.formModel
           }
         }
@@ -167,6 +164,16 @@ export default {
     // 显示增加表单
     showCreateForm() {
       this.deviceFormDialog.visible = true
+    },
+    // 每页条数变更
+    handleSizeChange(size) {
+      this.devicePage.size = size
+      this.getList()
+    },
+    // 翻页
+    handleCurrentChange(current) {
+      this.devicePage.current = current
+      this.getList()
     }
   }
 }

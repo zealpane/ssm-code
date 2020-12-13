@@ -1,15 +1,9 @@
 package biz.demo.item.controller;
 
 
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -19,6 +13,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import biz.common.facade.PageRequest;
 import biz.demo.item.entity.ItemDevice;
 import biz.demo.item.service.ItemDeviceService;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -36,31 +32,42 @@ public class ItemDeviceController {
 	ItemDeviceService itemDeviceService;
 	
 	@GetMapping
-	public R getList(PageRequest pageRequest) {
+	public R getList(PageRequest pageRequest,
+					 @ApiParam("设备名称") @RequestParam(required = false) String name,
+					 Integer deviceType
+					 ) {
 		IPage<ItemDevice> page = new Page<>(pageRequest.getCurrent(), pageRequest.getSize());
 		QueryWrapper<ItemDevice> qw = new QueryWrapper<ItemDevice>();
-		
+		// 条件查询
+		if (name != null && !"".equals(name)) {
+			qw.eq("name", name);
+		}
+		if (deviceType != null && !"".equals(deviceType)) {
+			qw.eq("device_type", deviceType);
+		}
 		IPage<ItemDevice> l = itemDeviceService.page(page, qw);
 		return R.ok(l);
 	}
 	@PostMapping
 	public R create(@RequestBody ItemDevice entity) {
+		entity.setCreateTime(LocalDateTime.now());
 		itemDeviceService.save(entity);
 		return R.ok("添加成功");
 	}
 	@PutMapping
 	public R modify(@RequestBody ItemDevice entity) {
+		entity.setCreateTime(LocalDateTime.now());
 		itemDeviceService.updateById(entity);
 		return R.ok("修改成功");
 	}
 	
 	@GetMapping("/{id}")
-	public R getOne(@PathVariable Long id) {
+	public R getOne(@PathVariable Integer id) {
 		return R.ok(itemDeviceService.getById(id));
 	}
 	
 	@DeleteMapping
-	public R delete(Long id) {
+	public R delete(Integer id) {
 		itemDeviceService.removeById(id);
 		return R.ok("已删除");
 	}

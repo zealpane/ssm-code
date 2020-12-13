@@ -1,74 +1,70 @@
 <template>
-  <div class="app-container">
-    <div class="form">
-      <el-form :inline="true">
-        <el-form-item label="设备类型" prop="type">
-          <el-select v-model="searchForm.type" placeholder="请选择--">
+  <div class='app-container'>
+    <div class='form'>
+      <el-form :inline='true'>
+        <el-form-item label='设备类型' prop='type'>
+          <el-select v-model='searchForm.type' placeholder='请选择--'>
             <el-option
-              v-for="(item, index) in deviceTypeList"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
+              v-for='(item, index) in dependencyList.deviceTypeList'
+              :key='index'
+              :label='item.name'
+              :value='item.id'
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="设备名称">
-          <el-input v-model="searchForm.name" placeholder="请输入设备名称" />
+        <el-form-item label='设备名称'>
+          <el-input v-model='searchForm.name' placeholder='请输入设备名称' />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button type='primary' @click='getList'>查询</el-button>
         </el-form-item>
         <!-- <el-form-item>
       <el-button>重置</el-button>
     </el-form-item> -->
       </el-form>
     </div>
-    <div slot="header">
-      <el-button type="primary" size="small" @click="showCreateForm">新增</el-button>
-      <el-button type="danger" size="small" @click="batchDelete">删除</el-button>
+    <div slot='header'>
+      <el-button type='primary' size='small' @click='showCreateForm'>新增</el-button>
+      <el-button type='danger' size='small' @click='batchDelete'>删除</el-button>
     </div>
     <br>
     <el-table
-      v-loading="devicePage.listLoading"
-      :data="devicePage.records"
-      element-loading-text="Loading"
+      v-loading='devicePage.listLoading'
+      :data='devicePage.records'
+      element-loading-text='Loading'
       border
       fit
       highlight-current-row
     >
       <el-table-column
-        type="selection"
-        width="55"
+        type='selection'
+        width='55'
       />
-      <el-table-column align="center" label="序号" width="95">
-        <template slot-scope="scope">
+      <el-table-column align='center' label='序号' width='95'>
+        <template slot-scope='scope'>
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
-      <el-table-column label="设备信息">
-        <template slot-scope="scope">
-          名称：{{ scope.row.title }}
-          <p>型号：空气质量助手A2</p>
+      <el-table-column label='设备信息'>
+        <template slot-scope='scope'>
+          设备编号：{{ scope.row.deviceId }}
         </template>
       </el-table-column>
-      <el-table-column label="采集数据" align="center">
-        <template slot-scope="scope">
+      <el-table-column label='采集数据' align='center'>
+        <template slot-scope='scope'>
           <p>温度：{{ scope.row.temperature }}℃</p>
           <p>湿度：{{ scope.row.humidity }}%</p>
           <p>PM2.5：{{ scope.row.pm2d5 }}</p>
         </template>
       </el-table-column>
       
-      <el-table-column align="center" prop="created_at" label="上传时间" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
+      <el-table-column align='center' prop='created_at' label='上传时间' width='200'>
+        <template slot-scope='scope'>
+          <i class='el-icon-time' />
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
-        <template slot-scope="slotProps">
-          <el-button type="text" @click="relate(slotProps.$index)">查看详情</el-button>
-        </template>
+      <el-table-column label='操作' width='200'>
       </el-table-column>
     </el-table>
     <div class="pagination">
@@ -77,19 +73,18 @@
           layout="total, sizes, prev, pager, next, jumper"
           :pager-count="5"
           :total="devicePage.total"
-          :page-size="devicePage.pageSize"
-          :current-page="devicePage.currentPage"
+          :page-size="devicePage.size"
+          :current-page="devicePage.current"
           :page-sizes="[10, 50, 100, 200, 500, 1000]"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
     </div>
-
     <el-drawer
       title="我是标题"
       :visible.sync="deviceFormDialog.visible"
       direction="rtl"
-      :before-close="handleClose">
+    >
       <span>我来啦!</span>
     </el-drawer>
   </div>
@@ -124,9 +119,9 @@ export default {
           siteToken: ''
         },
         deviceFormRules: { // 增加或编辑表单校验规则
-          comments: [{ required: true, message: "请输入设备名称", trigger: "blur" }],
+          comments: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
           specificationToken: [
-            { required: true, message: "请选择分类", trigger: "change" }
+            { required: true, message: '请选择分类', trigger: 'change' }
           ]
         }
       },
@@ -148,25 +143,29 @@ export default {
     // 查询设备列表
     getList() {
       this.devicePage.listLoading = true
-      request.get(`/item/itemData`, 
-        { 
+      request.get(`/item/itemData`, { params: { 
           params: {
-            size: 10,
+            size: this.devicePage.size,
+            current: this.devicePage.current,
             ...this.formModel
           }
-        }
-      )
-      .then(res => {
+        }}).then(res => {
         // res.content.records.forEach((item, index) => {
         //   item.status = item.status === 0 ? '正常' : item.status === 2 ? '告警' : '失联'
         // })
-          this.devicePage = res.data
-          this.devicePage.listLoading = false
-     })
+        this.devicePage = res.data
+        this.devicePage.listLoading = false
+      })
     },
-    // 显示增加表单
-    showCreateForm() {
-      this.deviceFormDialog.visible = true
+    // 每页条数变更
+    handleSizeChange(size) {
+      this.devicePage.size = size
+      this.getList()
+    },
+    // 翻页
+    handleCurrentChange(current) {
+      this.devicePage.current = current
+      this.getList()
     }
   }
 }

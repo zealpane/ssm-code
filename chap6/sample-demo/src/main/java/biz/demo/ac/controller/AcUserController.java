@@ -1,6 +1,7 @@
 package biz.demo.ac.controller;
 
 
+import biz.config.U;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -96,5 +97,10 @@ public class AcUserController {
 	public R delete(Long id) {
 		acUserService.removeById(id);
 		return R.ok("已删除");
+	}
+
+	@GetMapping("/selfInfo")
+	public R getSelfInfo() {
+		return R.ok(U.getUserId());
 	}
 }

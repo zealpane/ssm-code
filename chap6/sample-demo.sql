@@ -66,7 +66,7 @@ CREATE TABLE `g_item_data`  (
   `id` bigint(20) NOT NULL,
   `temperature` double(255, 0) NULL DEFAULT NULL COMMENT '温度',
   `humidity` double(255, 0) NULL DEFAULT NULL COMMENT '湿度',
-  `pm2d5` double(255, 0) NULL DEFAULT NULL COMMENT 'pm2.5',
+  `pm2d5` double(255, 0) NULL COMMENT 'pm2.5',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '数据上传时间',
   `device_id` bigint(20) NULL DEFAULT NULL COMMENT '设备id',
   PRIMARY KEY (`id`) USING BTREE
@@ -89,7 +89,7 @@ CREATE TABLE `g_item_device`  (
   `user_id` int(11) NULL DEFAULT NULL COMMENT '用户id',
   `data_json` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '最新数据json序列化',
   `status` tinyint(4) NULL DEFAULT NULL COMMENT '设备状态',
-  `last_data_time` datetime(0) NULL DEFAULT NULL COMMENT '最后数据时间',
+  `last_data_time` datetime(0) NOT NULL COMMENT '最后数据时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '设备' ROW_FORMAT = Compact;
 

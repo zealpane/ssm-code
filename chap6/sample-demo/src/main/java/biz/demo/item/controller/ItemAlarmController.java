@@ -1,6 +1,7 @@
 package biz.demo.item.controller;
 
 
+import biz.demo.SocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,8 @@ public class ItemAlarmController {
 
 	@Autowired
 	ItemAlarmService itemAlarmService;
+	@Autowired
+	SocketServer socketServer;
 	
 	@GetMapping
 	public R getList(PageRequest pageRequest) {
@@ -47,6 +50,8 @@ public class ItemAlarmController {
 	@PostMapping
 	public R create(@RequestBody ItemAlarm entity) {
 		itemAlarmService.save(entity);
+		// 向指定用户推送告警信息
+		socketServer.toAll("alarmEvent", entity);
 		return R.ok("添加成功");
 	}
 	@PutMapping

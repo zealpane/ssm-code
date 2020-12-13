@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import io.swagger.annotations.ApiModel;
@@ -55,6 +56,19 @@ public class ItemDevice extends Model<ItemDevice> {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastDataTime;
 
+    @ApiModelProperty(value = "纬度")
+    private BigDecimal latitude;
+
+    @ApiModelProperty(value = "经度")
+    private BigDecimal longitude;
+
+    @ApiModelProperty(value = "位置")
+    private String address;
+
+    private Integer deviceType;
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 
     @Override
     protected Serializable pkVal() {

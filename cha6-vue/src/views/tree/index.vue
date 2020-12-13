@@ -23,10 +23,6 @@
     </el-form-item> -->
       </el-form>
     </div>
-    <div slot="header">
-      <el-button type="primary" size="small" @click="showCreateForm">新增</el-button>
-      <el-button type="danger" size="small" @click="batchDelete">删除</el-button>
-    </div>
     <br>
     <el-table
       v-loading="devicePage.listLoading"
@@ -63,9 +59,7 @@
         </template>
       </el-table-column> -->
       <el-table-column label="操作" width="200">
-        <template slot-scope="slotProps">
-          <el-button type="text" @click="relate(slotProps.$index)">查看详情</el-button>
-        </template>
+        
       </el-table-column>
     </el-table>
     <div class="pagination">
@@ -146,8 +140,7 @@ export default {
     getList() {
       this.devicePage.listLoading = true
       request.get(`/ac/acUser`, 
-        { 
-          params: {
+        {params: {
             size: 10,
             ...this.formModel
           }

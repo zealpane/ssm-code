@@ -69,6 +69,12 @@ export const constantRoutes = [
         meta: { title: '设备', icon: 'table' }
       },
       {
+        path: 'deviceMap',
+        name: 'deviceMap',
+        component: () => import('@/views/table/deviceMap'),
+        meta: { title: '设备地图', icon: 'table' }
+      },
+      {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
@@ -85,6 +91,12 @@ export const constantRoutes = [
         name: 'historyData',
         component: () => import('@/views/historyData/index'),
         meta: { title: '历史数据', icon: 'tree' }
+      },
+      {
+        path: 'charts',
+        name: 'charts',
+        component: () => import('@/views/app/charts'),
+        meta: { title: '历史曲线', icon: 'tree' }
       }
     ]
   },
